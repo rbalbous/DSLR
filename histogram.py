@@ -1,13 +1,14 @@
 import csv
 import sys
 import matplotlib.pyplot as plt
+from tools import mean
 
 def init_tab(data):
     name = ["Gryffindor", "Slytherin", "Ravenclaw", "Hufflepuff"]
-    house = [[item for item in data if item[1] == name[i]] for i in range(4)]
+    house = [[item[6:] for item in data if item[1] == name[i]] for i in range(4)]
+    subjects = [subj for subj in data[0]][6:]
 
-
-    fig = plt.figure(figsize=(25, 15), facecolor='beige')
+    fig = plt.figure(figsize=(25, 15), facecolor='grey')
     fig.canvas.set_window_title('[Histogram]')
     color = {'Gryffindor':'crimson', 'Slytherin':'green', 'Ravenclaw':'teal', 'Hufflepuff':'purple'}
     plt.subplot(5, 3, 1)
@@ -19,11 +20,13 @@ def init_tab(data):
     plt.yticks([], [])
     plt.title('Houses')
     for i, feature in enumerate(house):
-        plt.subplot(5, 3, i + 2)
-        plt.title(feature)
+        print(i)
+        plt.subplot(5, 3, i + 1)
+        plt.title(subjects[i])
         plt.grid(True)
         for idx, item in enumerate(name):
-            plt.hist(item, 20, facecolor=color[name[idx]], alpha=0.5)
+            print(feature[:idx])
+            plt.hist(mean(feature[idx]), 20, color=color[idx], alpha=0.5)
     plt.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9, hspace=0.5, wspace=0.3)
     plt.show()  
 
