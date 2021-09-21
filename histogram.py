@@ -22,7 +22,7 @@ def init_tab(data):
     # plt.yticks([], [])
     # plt.title('Houses')
     # for i, feature in enumerate(houses):
-    #     print(i)
+    #     print(i)ewwwe
     #     plt.subplot(5, 3, i + 1)
     #     plt.grid(True)
     #     for idx, item in enumerate(names):
