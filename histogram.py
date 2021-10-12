@@ -2,51 +2,77 @@ import csv
 import sys
 import matplotlib.pyplot as plt
 from tools import mean
+import numpy as np
+
+def load_csv(filename):
+    dataset = list()
+    with open(filename) as csvfile:
+        reader = csv.reader(csvfile)
+        try:
+            for _ in reader:
+                row = list()
+                for value in _:
+                    try:
+                        value = float(value)
+                    except:
+                        if not value:
+                            value = np.nan
+                    row.append(value)
+                dataset.append(row)
+        except csv.Error as e:
+            print(f'file {filename}, line {reader.line_num}: {e}')
+    return np.array(dataset, dtype=object)
+
+def histogram(X, legend, title, xlabel, ylabel):
+    h1 = X[:327]
+    h1 = h1[~np.isnan(h1)]
+    plt.hist(h1, color='red', alpha=0.5)
+
+    h2 = X[327:856]
+    h2 = h2[~np.isnan(h2)]
+    plt.hist(h2, color='yellow', alpha=0.5)
+
+    h3 = X[856:1299]
+    h3 = h3[~np.isnan(h3)]
+    plt.hist(h3, color='blue', alpha=0.5)
+
+    h4 = X[1299:]
+    h4 = h4[~np.isnan(h4)]
+    plt.hist(h4, color='green', alpha=0.5)
+
+    plt.legend(legend, loc='upper right', frameon=False)
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.show()
 
 def init_tab(data):
-    Gryffindor = [[item[i] for item in data if item[1] == "Gryffindor"] for i in range(6, len(data[0]))]
-    Ravenclaw = [[item[i] for item in data if item[1] == "Ravenclaw"] for i in range(6, len(data[0]))]
-    Slytherin = [[item[i] for item in data if item[1] == "Slytherin"] for i in range(6, len(data[0]))]
-    Hufflepuff = [[item[i] for item in data if item[1] == "Hufflepuff"] for i in range(6, len(data[0]))]
+    Gryffindor = [float(item[16]) for item in data if item[1] == "Gryffindor" and item[16]]
+    Ravenclaw = [float(item[16])  for item in data if item[1] == "Ravenclaw" and item[16]]
+    Slytherin = [float(item[16])  for item in data if item[1] == "Slytherin" and item[16]]
+    Hufflepuff = [float(item[16])  for item in data if item[1] == "Hufflepuff" and item[16]]
     houses = [Gryffindor, Ravenclaw, Slytherin, Hufflepuff]
     names = ["Gryffindor", "Slytherin", "Ravenclaw", "Hufflepuff"]
-    fig = plt.figure(figsize=(25, 15), facecolor='grey')
-    fig.canvas.set_window_title('[Histogram]')
-    # color = {'Gryffindor':'crimson', 'Slytherin':'green', 'Ravenclaw':'teal', 'Hufflepuff':'purple'}
-    # plt.subplot(5, 3, 1)
-    # plt.text(0.2, 0.2, 'Gryffindor', fontdict={'color':color['Gryffindor'],'size':12})
-    # plt.text(0.2, 0.6, 'Ravenclaw', fontdict={'color':color['Ravenclaw'],'size':12})
-    # plt.text(0.6, 0.2, 'Hufflepuff', fontdict={'color':color['Hufflepuff'],'size':12})
-    # plt.text(0.6, 0.6, 'Slytherin', fontdict={'color':color['Slytherin'],'size':12})
-    # plt.xticks([], [])
-    # plt.yticks([], [])
-    # plt.title('Houses')
-    # for i, feature in enumerate(houses):
-    #     print(i)ewwwe
-    #     plt.subplot(5, 3, i + 1)
-    #     plt.grid(True)
-    #     for idx, item in enumerate(names):
-    #         plt.hist(mean(feature[idx]), 20, color=color[names[idx]], alpha=0.5)
-    # plt.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9, hspace=0.5, wspace=0.3)
-    plt.subplot(5, 3, 1)
-    means = [mean(item) for item in Gryffindor]
-    print (means)
-    plt.hist(means, range = (-1000, 1000), alpha=0.5, stacked = True, histtype='barstacked')
+#    print(Gryffindor)
+    plt.hist(Gryffindor, color='red', alpha=0.5)
+    plt.hist(Ravenclaw, color='yellow', alpha=0.5)
+    plt.hist(Slytherin, color='blue', alpha=0.5)
+    plt.hist(Hufflepuff, color='green', alpha=0.5)
+
+    plt.title('Care of magical creatures')
+    plt.xlabel('Grades')
+    plt.ylabel('Students')
     plt.show()
 
 
-
-
 def main():
-    sys.argv.pop(0)
-    for item in sys.argv:
-        # try:
-            with open(item) as fd:
-                tab = csv.reader(fd)
-                data = list(tab)
-                init_tab(data)
-        # except:
-        #     print("not a csv file")
+    # try:
+        with open('./dataset_train.csv') as fd:
+            tab = csv.reader(fd)
+            data = list(tab)
+            init_tab(data)
+    # except:
+    #     print("not a csv file")
 
 
 if __name__ == "__main__":

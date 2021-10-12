@@ -1,5 +1,4 @@
 import math
-import numpy as np
 
 def min(tab):
 	min_tab = float(tab[1])
